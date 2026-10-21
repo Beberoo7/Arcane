@@ -190,6 +190,20 @@ ol#lb{list-style:none;margin:0;padding:0;display:grid;gap:4px}
 @media (max-height: 450px) {
   #menu h1.menu-title { font-size: min(7.4vw, 42px); line-height: 1.12; }
 }
+
+/* Démonstration TAS — visuel uniquement ; aucune physique modifiée */
+#menu .menu-nav-tas{background:linear-gradient(100deg,rgba(80,47,137,.80),rgba(32,22,72,.85));border-color:rgba(188,154,255,.60)}
+#menu .menu-nav-tas small{font-family:Rubik,system-ui,sans-serif;opacity:.8;font-size:.70em;white-space:nowrap;margin-left:.5em;font-weight:600;letter-spacing:.02em}
+#tas-info{position:fixed;top:max(10px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);pointer-events:auto;z-index:12;background:rgba(14,8,34,.87);border:1px solid rgba(205,170,255,.60);border-radius:12px;padding:6px 11px;color:#f5eaff;font:700 12px Rubik,system-ui,sans-serif;display:flex;align-items:center;gap:12px;white-space:nowrap;box-shadow:0 4px 20px #0007}
+#tas-info button{padding:4px 10px;background:#7450ae;color:white;font-size:12px;border:0;box-shadow:none}
+#tas-result{position:fixed;inset:0;z-index:30;display:grid;place-items:center;padding:16px;background:rgba(11,6,32,.78);backdrop-filter:blur(5px)}
+#tas-result .tas-panel{max-width:460px;width:100%;text-align:center;padding:26px 20px;border-radius:20px;border:1px solid #a484e3;background:linear-gradient(155deg,#332054,#120b2a);box-shadow:0 14px 65px #0009;display:grid;gap:12px;color:#f2e9ff}
+#tas-result h2{margin:0;font:600 clamp(26px,6vw,44px) Cinzel,serif}
+#tas-result p{margin:0;font-size:14px;line-height:1.5;color:#d0bee8}
+#tas-result .tas-time{font:700 42px 'JetBrains Mono',monospace;color:#e6c8ff}
+#tas-result .tas-controls{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+#tas-result button{background:#7651b0;color:white;box-shadow:none;font-size:14px;padding:12px 14px}
+@media(max-height:520px){#menu .menu-nav-tas{padding-block:8px}#tas-info{top:5px}#tas-result .tas-panel{gap:7px;padding:12px}}
 </style>
 </head>
 <body>
@@ -215,6 +229,7 @@ ol#lb{list-style:none;margin:0;padding:0;display:grid;gap:4px}
         </div>
         <nav class="menu-navigation" aria-label="Menu principal">
           <button id="play" class="menu-nav-button menu-nav-main" type="button"><span class="menu-nav-mark" aria-hidden="true">✧</span><span>JOUER</span><span class="menu-nav-arrow" aria-hidden="true">›</span></button>
+          <button id="tas-start" class="menu-nav-button menu-nav-tas" type="button"><span class="menu-nav-mark" aria-hidden="true">◆</span><span>VOIR LE BOT TAS <small>12,892 s</small></span><span class="menu-nav-arrow" aria-hidden="true">›</span></button>
           <button class="menu-nav-button" type="button" data-menu-open="ranking"><span class="menu-nav-mark" aria-hidden="true">♛</span><span>CLASSEMENT</span><span class="menu-nav-arrow" aria-hidden="true">›</span></button>
           <button class="menu-nav-button" type="button" data-menu-open="options"><span class="menu-nav-mark" aria-hidden="true">⚙</span><span>OPTIONS</span><span class="menu-nav-arrow" aria-hidden="true">›</span></button>
           <button class="menu-nav-button" type="button" data-menu-open="help"><span class="menu-nav-mark" aria-hidden="true">◇</span><span>COMMENT JOUER</span><span class="menu-nav-arrow" aria-hidden="true">›</span></button>
@@ -309,6 +324,10 @@ ol#lb{list-style:none;margin:0;padding:0;display:grid;gap:4px}
     </div>
   </div>
 </div>
+
+
+<div id="tas-info" hidden><span id="tas-progress">TAS · 0,000 s</span><button id="tas-speed" type="button" title="Vitesse de lecture">×1</button><button id="tas-quit" type="button">MENU</button></div>
+<div id="tas-result" hidden><div class="tas-panel"><h2 id="tas-result-title">TAS terminé</h2><div id="tas-result-time" class="tas-time">—</div><p id="tas-result-note">Trajectoire simulée à 240 étapes/seconde. Le bot ne modifie pas ton record ni le classement.</p><div class="tas-controls"><button id="tas-again" type="button">REVOIR LE TAS</button><button id="tas-menu" type="button">RETOUR AU MENU</button></div></div></div>
 
 <script>
 // ===== ÉCLAIR — moteur (partagé jeu + bot) =====
@@ -1214,7 +1233,7 @@ function handleEvents() {
     else if (e[0] === 'crumble') { const c = L.crumbles[e[1]]; for (let k = 0; k < 10; k++) parts.push({ x: (c.x + Math.random() * c.w) * T, y: c.y * T + 10, vx: (Math.random() - .5) * 60, vy: 40 + Math.random() * 120, l: .7, L: .7, c: '#a8643c', s: 6 }); }
     else if (e[0] === 'cp') { ECLAIR_CP_TIMES[e[1]]=S.t; onSplit(e[1]); }
     else if (e[0] === 'die') { deaths++; deathT = 0.6; shake = 0.25; burst(cxp, p.y + 22, 30, '#ffd23f', 380, 0.6); burst(cxp, p.y + 15, 14, '#ff4d6d', 260, 0.5); $('dth').textContent = deaths; }
-    else if (e[0] === 'finish') finish();
+    else if (e[0] === 'finish') { if (tasRun) finishTas(true); else finish(); }
   }
   S.ev.length = 0;
 }
@@ -1236,7 +1255,7 @@ function frame(now) {
   } catch (err) { console.error(err); }
 }
 function tick(dt) {
-  if (botMode) { updCam(dt, false); return; }
+  if (botMode) { tickTas(dt); return; }
   const inp = input();
   if (!started) {
     if (inp.h || inp.j || inp.d || jumpPulse || dashPulse) { started = true; $('go').hidden = true; }
@@ -1298,6 +1317,8 @@ function render(dt) {
 
 // ---------- parties ----------
 function start() {
+  if(typeof tasRun !== 'undefined') tasRun=false;
+  $('tas-info').hidden=true; $('tas-result').hidden=true;
   ECLAIR_CP_TIMES=[]; ECLAIR_PORTAL_OPEN_AT=null;
   clearTouch(); runDist = 0; landT = 0; djT = 0; turnT = 0; takeT = 0; lastFace = 1; wallJumpT=0; wallJumpSide=1; idleBreathT=0; wasRunning=false; runIdleT=0;
   botMode = false; state = 'play'; S = newState(L); started = false; deaths = 0; deathT = 0; fadeIn = 0.3; acc = 0;
@@ -1309,7 +1330,7 @@ function start() {
   layout(); updCam(0, true);
 }
 function restart() { start(); }
-function toMenu() { setMenuPanel('home'); clearTouch(); state = 'menu'; $('menu').hidden = false; $('end').hidden = true; $('hud').hidden = true; $('go').hidden = true; layout(); renderMenu(); }
+function toMenu() { if(typeof tasRun !== 'undefined')tasRun=false; botMode=false; $('tas-info').hidden=true; $('tas-result').hidden=true; setMenuPanel('home'); clearTouch(); state = 'menu'; $('menu').hidden = false; $('end').hidden = true; $('hud').hidden = true; $('go').hidden = true; layout(); renderMenu(); }
 function medalFor(t) { for (const m of MEDALS) if (t <= m[1]) return m; return null; }
 function finish() {
   const t = S.t; state = 'end'; clearTouch(); runEnd = { t, deaths };
@@ -1446,6 +1467,75 @@ function renderPodium(){
     item.append(mark,who,time);out.append(item);
   }
 }
+
+
+// ===== TAS : lecture déterministe de commandes vérifiées avec le moteur original =====
+// Chaque étape physique correspond exactement à 1/240 seconde.
+const TAS_ROUTE=[{"a":"RD","n":8},{"a":"R","n":32},{"a":"RD","n":8},{"a":"R","n":32},{"a":"RD","n":8},{"a":"R","n":24},{"a":"RJ","n":8},{"a":"R","n":80},{"a":"RJ","n":24},{"a":"R","n":8},{"a":"RJ","n":16},{"a":"RD","n":8},{"a":"R","n":24},{"a":"RJ","n":8},{"a":"R","n":24},{"a":"RD","n":8},{"a":"R","n":24},{"a":"RJ","n":8},{"a":"R","n":112},{"a":"RJ","n":8},{"a":"RD","n":8},{"a":"R","n":16},{"a":"RJ","n":32},{"a":"LJ","n":8},{"a":"NR","n":8},{"a":"LJ","n":8},{"a":"R","n":8},{"a":"RJ","n":8},{"a":"NR","n":8},{"a":"RJ","n":8},{"a":"R","n":8},{"a":"RJ","n":16},{"a":"R","n":8},{"a":"NJ","n":8},{"a":"R","n":8},{"a":"RJ","n":16},{"a":"L","n":8},{"a":"RJ","n":8},{"a":"NR","n":8},{"a":"R","n":40},{"a":"RJ","n":8},{"a":"RD","n":8},{"a":"R","n":64},{"a":"NR","n":8},{"a":"R","n":16},{"a":"NR","n":16},{"a":"R","n":8},{"a":"NR","n":16},{"a":"R","n":8},{"a":"RD","n":8},{"a":"R","n":24},{"a":"RJ","n":8},{"a":"R","n":16},{"a":"L","n":8},{"a":"R","n":56},{"a":"RD","n":8},{"a":"RJ","n":8},{"a":"R","n":48},{"a":"RJ","n":32},{"a":"R","n":32},{"a":"RD","n":8},{"a":"R","n":16},{"a":"RJ","n":8},{"a":"R","n":120},{"a":"RD","n":8},{"a":"R","n":32},{"a":"RD","n":8},{"a":"R","n":32},{"a":"RD","n":8},{"a":"R","n":32},{"a":"RD","n":8},{"a":"R","n":24},{"a":"RJ","n":8},{"a":"R","n":80},{"a":"RD","n":8},{"a":"R","n":40},{"a":"RD","n":8},{"a":"R","n":24},{"a":"RJ","n":8},{"a":"R","n":32},{"a":"L","n":8},{"a":"R","n":32},{"a":"RD","n":8},{"a":"R","n":24},{"a":"RJ","n":8},{"a":"R","n":16},{"a":"RD","n":8},{"a":"R","n":24},{"a":"RJ","n":8},{"a":"R","n":72},{"a":"RJ","n":8},{"a":"RD","n":8},{"a":"R","n":24},{"a":"RJ","n":8},{"a":"R","n":80},{"a":"RD","n":8},{"a":"RJ","n":8},{"a":"R","n":72},{"a":"RD","n":8},{"a":"R","n":32},{"a":"L","n":8},{"a":"RD","n":8},{"a":"R","n":24},{"a":"RJ","n":8},{"a":"R","n":32},{"a":"L","n":8},{"a":"R","n":96},{"a":"RD","n":8},{"a":"R","n":24},{"a":"RJ","n":40},{"a":"R","n":8},{"a":"RJ","n":16},{"a":"R","n":88},{"a":"RJ","n":8},{"a":"R","n":6},{"a":"RJ","n":7},{"a":"NR","n":7},{"a":"R","n":56},{"a":"RD","n":8},{"a":"R","n":32},{"a":"RD","n":8},{"a":"R","n":24},{"a":"RJ","n":8},{"a":"R","n":32},{"a":"RD","n":8},{"a":"R","n":56},{"a":"RD","n":8},{"a":"R","n":48},{"a":"NR","n":8},{"a":"R","n":8},{"a":"RD","n":8},{"a":"R","n":32},{"a":"RJ","n":8},{"a":"R","n":56},{"a":"RUD","n":8},{"a":"R","n":56},{"a":"NR","n":10},{"a":"RD","n":8},{"a":"R","n":29},{"a":"RD","n":8},{"a":"R","n":29},{"a":"RD","n":8},{"a":"R","n":24},{"a":"RJ","n":8},{"a":"R","n":16}];
+const TAS_ACTIONS={
+ R:[1,0,0,0],RJ:[1,1,0,0],NR:[0,0,0,0],NJ:[0,1,0,0],
+ L:[-1,0,0,0],LJ:[-1,1,0,0],RD:[1,0,1,0],RUD:[1,0,1,-1],
+ UD:[0,0,1,-1],RJD:[1,1,1,0],RUJD:[1,1,1,-1],
+ LUD:[-1,0,1,-1],LD:[-1,0,1,0]
+};
+const TAS_REFERENCE_TIME=12.891666666666255;
+let tasRun=false,tasChunk=0,tasOffset=0,tasAcc=0,tasRate=1,tasFrames=0;
+function startTas(){
+ start();
+ tasRun=true;botMode=true;started=true;tasChunk=0;tasOffset=0;tasAcc=0;tasFrames=0;tasRate=1;
+ ghostPlay=null; $('go').hidden=true; $('touch').hidden=true; $('tas-result').hidden=true;
+ $('tas-info').hidden=false; $('tas-progress').textContent='TAS · 0,000 s'; $('tas-speed').textContent='×1';
+}
+function finishTas(success){
+ tasRun=false;botMode=false;state='end';$('tas-info').hidden=true;
+ $('tas-result').hidden=false;$('hud').hidden=true;$('touch').hidden=true;
+ $('tas-result-title').textContent=success?'TAS — PARCOURS TERMINÉ':'TAS — PARCOURS INTERROMPU';
+ $('tas-result-time').textContent=S.t.toFixed(3).replace('.',',')+' s';
+ $('tas-result-note').textContent=success
+  ? 'Arrivée vérifiée sans mourir, avec commandes rejouées au pas de 1/240 s. Ce résultat n’est pas un record humain et ne prouve pas l’optimum absolu.'
+  : 'La reproduction a échoué avant le portail. Le classement personnel n’a pas été modifié.';
+}
+function tickTas(dt){
+ if(!tasRun)return;
+ tasAcc+=Math.max(0,dt)*tasRate;
+ let ticks=0;
+ while(tasAcc+1e-10>=DT && ticks++<120 && tasRun && state==='play'){
+   tasAcc-=DT;
+   const c=TAS_ROUTE[tasChunk];
+   if(!c){finishTas(S.done);break;}
+   const a=TAS_ACTIONS[c.a];
+   const first=(tasOffset===0);
+   const pressJump=first&&!!a[1]&&!S.p.pj;
+   const pressDash=first&&!!a[2]&&!S.p.pd;
+   step(L,S,{h:a[0],v:a[3],j:!!a[1],d:pressDash,jp:pressJump,dp:pressDash},DT);
+   tasFrames++;
+   tasOffset++;
+   if(tasOffset>=c.n){tasChunk++;tasOffset=0;}
+   if(S.p.gr && Math.abs(S.p.vx)>30)runDist+=Math.abs(S.p.vx)*DT;
+   landT-=DT;djT-=DT;takeT-=DT;turnT-=DT;wallJumpT=Math.max(0,wallJumpT-DT);
+   if(S.p.gr && Math.abs(S.p.vx)<30)idleBreathT+=DT;else idleBreathT=0;
+   if(S.p.gr&&S.p.face!==lastFace)turnT=0.2;
+   lastFace=S.p.face;
+   handleEvents();recGhost();
+   if(S.dead){finishTas(false);break;}
+ }
+ if(tasRun){$('tas-progress').textContent='BOT TAS · '+S.t.toFixed(3).replace('.',',')+' s · '+tasFrames+' frames';updCam(dt,false);}
+}
+$('tas-start').addEventListener('click',startTas);
+$('tas-again').addEventListener('click',startTas);
+$('tas-menu').addEventListener('click',toMenu);
+$('tas-quit').addEventListener('click',toMenu);
+const TAS_PLAYBACK_SPEEDS=[1,0.5,0.25,2,4];
+$('tas-speed').title='Changer la vitesse : ×1, ×0,5, ×0,25, ×2, ×4';
+$('tas-speed').addEventListener('click',()=>{
+  const next=(TAS_PLAYBACK_SPEEDS.indexOf(tasRate)+1)%TAS_PLAYBACK_SPEEDS.length;
+  tasRate=TAS_PLAYBACK_SPEEDS[next];
+  $('tas-speed').textContent='×'+String(tasRate).replace('.',',');
+});
+window.__eclairTAS={play:startTas,referenceTime:TAS_REFERENCE_TIME,
+ get status(){return {active:tasRun,frames:tasFrames,time:S&&S.t,done:S&&S.done,dead:S&&S.dead,mode:state};},
+ fastForward(){let count=0;while(tasRun&&count++<1000)tickTas(0.05);return this.status;}
+};
 
 // accès test
 window.__eclair = { L, step, newState, cloneState, get S() { return S; }, start, state: () => state, play(hist) {
