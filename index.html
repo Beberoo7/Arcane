@@ -204,6 +204,15 @@ ol#lb{list-style:none;margin:0;padding:0;display:grid;gap:4px}
 #tas-result .tas-controls{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
 #tas-result button{background:#7651b0;color:white;box-shadow:none;font-size:14px;padding:12px 14px}
 @media(max-height:520px){#menu .menu-nav-tas{padding-block:8px}#tas-info{top:5px}#tas-result .tas-panel{gap:7px;padding:12px}}
+
+/* Carte d'orientation : révéler la structure sans interrompre l'action. */
+#mini-wrap{position:absolute;top:59px;right:max(14px,env(safe-area-inset-right));
+  width:267px;background:rgba(15,7,38,.94);border:1px solid rgba(224,188,255,.52);
+  padding:10px 9px 8px;border-radius:12px;box-shadow:0 12px 30px #0a0618a8;pointer-events:none}
+#mini-map{position:static;inset:auto;width:248px;height:108px;image-rendering:auto;display:block;max-width:100%}
+#mini-wrap small{display:block;text-align:center;font-size:10px;letter-spacing:.6px;color:#c9b2e8;margin-top:4px}
+#hmap[aria-pressed="true"]{background:rgba(175,116,255,.42)!important;border-color:#dfb5ff!important}
+@media(max-width:640px){#mini-wrap{width:218px;top:55px;padding:8px}#mini-map{width:200px;height:87px}}
 </style>
 </head>
 <body>
@@ -215,8 +224,8 @@ ol#lb{list-style:none;margin:0;padding:0;display:grid;gap:4px}
   <div class="menu-stars" aria-hidden="true"></div>
   <div class="menu-frame">
     <header class="menu-header">
-      <span class="menu-ident"><span class="menu-ident-star">✧</span> LES RUINES CÉLESTES</span>
-      <span class="menu-chapter">CHAPITRE I <span class="menu-top-sep">◆</span> LE DÉFI DU TEMPS</span>
+      <span class="menu-ident"><span class="menu-ident-star">✧</span> LES RUINES CÉLESTES · LA SPIRALE</span>
+      <span class="menu-chapter">CHAPITRE II <span class="menu-top-sep">◆</span> LE DÉFI DU TEMPS</span>
     </header>
 
     <main class="menu-main" aria-live="polite">
@@ -229,7 +238,7 @@ ol#lb{list-style:none;margin:0;padding:0;display:grid;gap:4px}
         </div>
         <nav class="menu-navigation" aria-label="Menu principal">
           <button id="play" class="menu-nav-button menu-nav-main" type="button"><span class="menu-nav-mark" aria-hidden="true">✧</span><span>JOUER</span><span class="menu-nav-arrow" aria-hidden="true">›</span></button>
-          <button id="tas-start" class="menu-nav-button menu-nav-tas" type="button"><span class="menu-nav-mark" aria-hidden="true">◆</span><span>TAS OPTIMISÉ <small>9.692 s</small></span><span class="menu-nav-arrow" aria-hidden="true">›</span></button>
+          <button id="tas-start" class="menu-nav-button menu-nav-tas" type="button"><span class="menu-nav-mark" aria-hidden="true">◆</span><span>TAS · 15,692 s <small>meilleur trajet trouvé</small></span><span class="menu-nav-arrow" aria-hidden="true">›</span></button>
           <button class="menu-nav-button" type="button" data-menu-open="ranking"><span class="menu-nav-mark" aria-hidden="true">♛</span><span>CLASSEMENT</span><span class="menu-nav-arrow" aria-hidden="true">›</span></button>
           <button class="menu-nav-button" type="button" data-menu-open="options"><span class="menu-nav-mark" aria-hidden="true">⚙</span><span>OPTIONS</span><span class="menu-nav-arrow" aria-hidden="true">›</span></button>
           <button class="menu-nav-button" type="button" data-menu-open="help"><span class="menu-nav-mark" aria-hidden="true">◇</span><span>COMMENT JOUER</span><span class="menu-nav-arrow" aria-hidden="true">›</span></button>
@@ -245,7 +254,7 @@ ol#lb{list-style:none;margin:0;padding:0;display:grid;gap:4px}
         <div class="menu-panel-top"><button class="menu-back" type="button" data-menu-open="home">‹ <span>RETOUR</span></button><span class="menu-panel-sigil">✦</span></div>
         <div class="menu-section-kicker">LES PLUS RAPIDES</div>
         <h2 class="menu-section-title">CLASSEMENT</h2>
-        <p class="menu-section-desc">Nouveau parcours FLOW. Les records précédents ne comptent pas sur cette carte.</p>
+        <p class="menu-section-desc">La Spirale est un nouveau parcours vertical. Les anciens records restent séparés.</p>
         <div id="ranking-podium" class="menu-podium" aria-label="Podium des meilleurs temps"></div>
         <div class="menu-ranking-list"><div class="menu-list-heading"><span>MEILLEURS TEMPS</span><span>CHRONO</span></div><ol id="lb"></ol></div>
         <div class="menu-medal-line" id="medals"></div>
@@ -275,10 +284,11 @@ ol#lb{list-style:none;margin:0;padding:0;display:grid;gap:4px}
         <div class="menu-controls-grid">
           <div class="menu-control"><span class="menu-control-icon">← →</span><div><strong>COURIR</strong><small>Flèches ou Q / D · boutons ◀ ▶ sur téléphone</small></div></div>
           <div class="menu-control"><span class="menu-control-icon">ESPACE</span><div><strong>SAUT / DOUBLE SAUT</strong><small>Maintiens pour monter plus haut ; appuie à nouveau en l'air</small></div></div>
-          <div class="menu-control"><span class="menu-control-icon">X</span><div><strong>DASH</strong><small>Une ruée rapide · ↑ + X pour monter en diagonale</small></div></div>
+          <div class="menu-control"><span class="menu-control-icon">X</span><div><strong>DASH</strong><small>8 directions · sur mobile, glisse en haut/bas du pavé en appuyant sur DASH</small></div></div>
           <div class="menu-control"><span class="menu-control-icon">↗</span><div><strong>SAUT MURAL</strong><small>Saute au contact d'un mur pour rebondir</small></div></div>
           <div class="menu-control"><span class="menu-control-icon">◆</span><div><strong>CRISTAL</strong><small>Recharge ton dash pendant le parcours</small></div></div>
-          <div class="menu-control"><span class="menu-control-icon">↺</span><div><strong>RECOMMENCER</strong><small>Touche R · Échap pour revenir au menu</small></div></div>
+          <div class="menu-control"><span class="menu-control-icon">M</span><div><strong>CARTE</strong><small>Visualise la spirale et tes checkpoints, sans pause</small></div></div>
+           <div class="menu-control"><span class="menu-control-icon">↺</span><div><strong>RECOMMENCER</strong><small>Touche R · Échap pour revenir au menu</small></div></div>
         </div>
         <p class="menu-help-note">Astuce : les sauts ont une tolérance de bord et de timing. Tu gardes toujours le contrôle en l’air !</p>
       </section>
@@ -291,9 +301,10 @@ ol#lb{list-style:none;margin:0;padding:0;display:grid;gap:4px}
 <div id="hud" hidden>
   <div id="dthw">✖ <span id="dth">0</span></div>
   <div id="tm">0.00</div>
-  <div id="fl"></div>
-  <div id="hbtn"><button id="hr" title="Recommencer (R)">↺</button><button id="hm" title="Menu (Échap)">☰</button></div>
+  <div id="fl"></div><div id="zone" style="position:absolute;top:max(78px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);font:600 11px Rubik,sans-serif;color:#d0beed;letter-spacing:1px;text-shadow:0 2px 5px #10051b;text-align:center;white-space:nowrap"></div>
+  <div id="hbtn"><button id="hmap" title="Afficher la carte (M)" aria-pressed="false">CARTE</button><button id="hr" title="Recommencer (R)">↺</button><button id="hm" title="Menu (Échap)">☰</button></div>
 </div>
+<div id="mini-wrap" hidden><canvas id="mini-map" width="248" height="108"></canvas><small><span style="color:#9dfcff">●</span> TOI · <span style="color:#e1baed">◆</span> CHECKPOINT · <span style="color:#ffcb77">◆</span> PORTAIL</small></div>
 <div id="go" hidden></div>
 <div id="rot" hidden>Tourne ton téléphone en paysage</div>
 <div id="touch" hidden>
@@ -316,7 +327,7 @@ ol#lb{list-style:none;margin:0;padding:0;display:grid;gap:4px}
         <button id="send">Envoyer mon temps</button>
       </div>
       <div id="sendmsg"></div>
-      <div id="nodb" class="help">Carte FLOW : ton record reste enregistré localement, séparé de l’ancien circuit.</div>
+      <div id="nodb" class="help">La Spirale : records enregistrés localement, indépendants des anciens niveaux.</div>
       <div class="row" style="justify-content:center">
         <button id="again">Rejouer (R)</button>
         <button id="tomenu" class="ghost">Menu</button>
@@ -326,8 +337,8 @@ ol#lb{list-style:none;margin:0;padding:0;display:grid;gap:4px}
 </div>
 
 
-<div id="tas-info" hidden><span id="tas-progress">TAS · 0,000 s</span><button id="tas-speed" type="button" title="Vitesse de lecture">×1</button><button id="tas-quit" type="button">MENU</button></div>
-<div id="tas-result" hidden><div class="tas-panel"><h2 id="tas-result-title">TAS terminé</h2><div id="tas-result-time" class="tas-time">—</div><p id="tas-result-note">TAS calculé pour la nouvelle carte. Même physique que le joueur, aucun record personnel modifié.</p><div class="tas-controls"><button id="tas-again" type="button">REVOIR LE TAS</button><button id="tas-menu" type="button">RETOUR AU MENU</button></div></div></div>
+<div id="tas-info" hidden><span id="tas-progress">TAS SPIRALE · 0,000 s</span><button id="tas-speed" type="button" title="Vitesse de lecture">×1</button><button id="tas-quit" type="button">MENU</button></div>
+<div id="tas-result" hidden><div class="tas-panel"><h2 id="tas-result-title">TAS terminé</h2><div id="tas-result-time" class="tas-time">—</div><p id="tas-result-note">TAS SPIRALE : calcul effectué sur la nouvelle carte, physique identique au joueur, aucun record personnel modifié.</p><div class="tas-controls"><button id="tas-again" type="button">REVOIR LE TAS</button><button id="tas-menu" type="button">RETOUR AU MENU</button></div></div></div>
 
 <script>
 // ===== ÉCLAIR — moteur (partagé jeu + bot) =====
@@ -340,57 +351,88 @@ const PH = { G: 2850, FALL: 990, SLIDE: 190, RUN: 345, ACC_G: 5700, ACC_A: 3800,
   DASH: 840, DASH_T: 0.15, DASH_END: 420, SPRING: 1260, DJ: 750, PW: 22, PH: 44 };
 
 function buildLevel() {
-  // ÉCLAIR : NOUVEAU PARCOURS « FLOW » — progression lisible sans arrêt forcé.
-  // Chaque fosse est franchissable en course + saut. Le dash / double saut
-  // ouvrent des trajectoires plus rapides ; aucun ascenseur à attendre.
-  const W=180,H=24;
+  // ÉCLAIR — LA SPIRALE : un vrai parcours vertical, à contre-courant de l'ancienne course horizontale.
+  // Progression : est -> ascension -> est -> ascension -> ouest -> ascension -> est.
+  // Les modules sont pensés comme des pièces de Celeste : lecture, risque, reprise d'élan, variété.
+  const W=124,H=54;
   const g=Array.from({length:H},()=>Array(W).fill(' '));
   const solid=(x0,y0,x1,y1)=>{
     for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++)
       if(x>=0&&x<W&&y>=0&&y<H)g[y][x]='#';
   };
   const spikes=(x0,x1,y)=>{
-    for(let x=x0;x<=x1;x++)if(x>=0&&x<W)g[y][x]='^';
+    for(let x=x0;x<=x1;x++)if(x>=0&&x<W&&y>=0&&y<H)g[y][x]='^';
   };
-  const L={W,H,g,plats:[],saws:[],crystals:[],springs:[],crumbles:[],cps:[],hints:[],finish:null};
-  solid(0,0,0,23);
-  // 1 — L'ENVOL : long élan, premier saut visuel, aucune contrainte aveugle.
-  solid(0,18,12,23); solid(16,18,28,23);
-  solid(29,17,33,23); solid(37,17,48,23);
-  L.hints.push([2,14.5,'01  ·  L’ENVOL'],[9,14.5,'Garde ton élan  →'],[17,14.5,'SAUT · garde pour monter']);
-  // 2 — LES ARCADES : vague de relief, plateformes larges, raccourcis aériens.
-  solid(52,16,62,23); solid(66,16,76,23); solid(82,17,91,23);
-  L.crystals.push({x:65.0,y:12.7},{x:78.8,y:13.5});
-  L.plats.push({x:78,y:14,w:3,dx:1.4,dy:0,per:2.6,ph:0.25});
-  L.hints.push([39,12,'02  ·  LES ARCADES'],[54,12,'DASH  →  plus vite'],[70,12,'◆  recharge ton dash']);
-  L.cps.push({x:88,y:16});
-  // 3 — LA CASCADE : descente puis enchaînements de plateformes éphémères.
-  solid(95,18,102,23);
-  L.crumbles.push({x:104,y:18,w:2},{x:107,y:18,w:2});
-  solid(110,17,117,23);
-  // Spring facultatif : raccourci spectaculaire, non obligatoire pour terminer.
-  L.springs.push({x:113,y:16});
-  solid(123,16,131,23);
-  L.crystals.push({x:120,y:13.4});
-  L.hints.push([97,13,'03  ·  LA CASCADE'],[104,14,'SOL FRAGILE'],[112,12,'RESSORT  ↑']);
-  // 4 — LES LAMES : danger lisible, scies hors du chemin au sol.
-  solid(135,17,144,23); solid(149,18,158,23);
-  L.saws.push({x:139,y:11.8,dx:0,dy:1.4,per:3.2,r:16});
-  L.saws.push({x:153.5,y:12.0,dx:0,dy:1.3,per:2.7,r:16});
-  L.plats.push({x:145,y:14,w:2.5,dx:2,dy:0,per:2.6,ph:0.5});
-  L.hints.push([135,12,'04  ·  LES LAMES'],[149,11,'N’arrête jamais !']);
-  L.cps.push({x:153,y:17});
-  // 5 — L'ULTIME ÉCLAIR : dernier franchissement puis sprint final.
-  solid(162,18,179,23); solid(179,0,179,23);
-  L.crystals.push({x:160.2,y:14.0});
-  L.hints.push([161,12,'05  ·  LA GLOIRE'],[167,14,'SPRINT FINAL  →']);
-  L.finish={x:175,y:17};
-  L.start={x:2,y:17}; L.cps.unshift(L.start);
-  // Les fosses mortelles sont plus basses que la course, clairement signalées.
-  const holes=[[13,15],[34,36],[49,51],[63,65],[77,81],[92,94],
-    [103,109],[118,122],[132,134],[145,148],[159,161]];
-  for(const [a,b]of holes){solid(a,23,b,23);spikes(a,b,22);}
-  L.holes=holes;
+  const ledge=(x0,x1,y,th=2)=>solid(x0,y,x1,y+th-1);
+  const L={W,H,g,plats:[],saws:[],crystals:[],springs:[],crumbles:[],cps:[],hints:[],finish:null,holes:[]};
+  solid(0,0,0,H-1);solid(W-1,0,W-1,H-1);
+  // Vide mortel SOUS les salles, pas une « fosse » à chaque saut.
+  solid(1,H-1,W-2,H-1);spikes(1,W-2,H-2);
+
+  // SALLE I — LE RÉVEIL. Courbe ascendante, puis une première vraie décision.
+  ledge(1,10,46,8);ledge(14,18,44);ledge(21,26,41);ledge(29,34,38);
+  // Petit surplomb à contourner ou à utiliser comme appui mural.
+  solid(11,43,11,46);ledge(8,10,40,1);
+  L.crumbles.push({x:18,y:41,w:2},{x:26,y:38,w:2});
+  L.crystals.push({x:18.8,y:39.1},{x:27.4,y:35.5});
+  L.hints.push([3,40.2,'I  ·  LE RÉVEIL'],[6,43.4,'SAUT  →'],[21,36.8,'↗  PRENDS DE LA HAUTEUR']);
+
+  // SALLE II — LA FAILLE : vraie montée en épingles, murs exploitables au saut mural.
+  ledge(37,42,35);  // x=37..42, y=35
+  ledge(31,35,32);ledge(39,45,30);ledge(35,38,26);
+  // Roches en surplomb avec deux itinéraires autour : paroi pour rebond, ou doubles sauts.
+  solid(27,28,28,34); // paroi de saut ; l’entrée du Viaduc reste ouverte
+  L.crystals.push({x:34.7,y:29.8},{x:42.3,y:25});
+  L.cps.push({x:41,y:29});
+  L.hints.push([29,25,'II  ·  LA FAILLE'],[30,29,'↖  MUR'],[40,23.8,'◆ DASH RECHARGÉ']);
+
+  // SALLE III — LE VIADUC. Les dalles alternent en hauteur. Deux voies réelles :
+  // trajectoire basse récupérable / crêtes hautes rapides, plus risquées.
+  ledge(46,51,30);ledge(55,60,29);ledge(64,69,31);ledge(73,79,29);ledge(82,89,30);
+  // Route haute facultative, exige saut enchaîné et dash ; raccourci direct à la zone suivante.
+  ledge(53,57,25,1);ledge(61,65,24,1);ledge(69,73,25,1);ledge(78,83,24,1);
+  L.crumbles.push({x:60,y:28,w:2},{x:70,y:29,w:2});
+  L.crystals.push({x:57.3,y:22.5},{x:72.4,y:22.3},{x:81.0,y:21.7});
+  L.saws.push({x:66.8,y:22.2,dx:1.0,dy:0,per:2.6,r:15});
+  L.cps.push({x:85,y:29});
+  L.hints.push([50,21,'III  ·  LE VIADUC'],[53,27,'ROUTE SÛRE  →'],[63,21,'ROUTE RAPIDE  ↗']);
+
+  // SALLE IV — LA TOUR INVERSÉE. Lignes de vue verticales, appuis alternés.
+  ledge(89,93,27);ledge(96,100,24);ledge(89,93,21);ledge(96,100,18);ledge(88,93,15);
+  solid(103,17,104,28); // paroi optionnelle pour saut mural, pas un barrage sur le parcours
+  L.plats.push({x:93.5,y:20.3,w:2,dx:1.5,dy:-2.4,per:2.65,ph:0.18});
+  L.crystals.push({x:94,y:21.4},{x:94,y:15.6});
+  L.saws.push({x:102.5,y:23.2,dx:0,dy:-2.8,per:3.2,r:15});
+  L.cps.push({x:90,y:14});
+  L.hints.push([87,12,'IV  ·  LA TOUR'],[93,26,'↗  MONTE'],[94,12.3,'←  DEMI-TOUR !']);
+
+  // SALLE V — LES VOÛTES. Le joueur repart VERS LA GAUCHE, sous les ponts du final.
+  ledge(81,86,16);ledge(72,77,17);ledge(64,69,16);ledge(55,60,18);ledge(46,51,16);ledge(38,43,17);
+  // Accents de verticalité : dais suspendus, mini-arches et traversée alternative.
+  ledge(73,76,12,1);ledge(61,64,12,1);ledge(50,53,12,1);
+  L.crumbles.push({x:68,y:15,w:2},{x:60,y:16,w:2});
+  L.crystals.push({x:75.4,y:13.8},{x:59.3,y:13.4});
+  L.saws.push({x:67,y:12.3,dx:-1.2,dy:0,per:2.9,r:14});
+  L.cps.push({x:59,y:17});
+  L.hints.push([69,11.2,'V  ·  LES VOÛTES'],[80,13.1,'←  LE PASSAGE SE RENVERSE'],[49,13.3,'↖  ENCORE UN EFFORT']);
+
+  // SALLE VI — LA FLÈCHE. Une dernière montée, puis finale aérienne à deux lignes.
+  ledge(36,41,14);ledge(30,34,11);ledge(37,42,8);
+  // Utilisable en wall jump, sans aucun plafond bas qui coupe les sauts.
+  solid(28,5,29,10);
+  L.crystals.push({x:35.0,y:9.3});
+  L.cps.push({x:39,y:7});
+  L.hints.push([30,4.8,'VI  ·  LA FLÈCHE'],[38,5,'→  VERS LE PORTAIL']);
+  // Dernière salle : variations de hauteur, aérien, route stable et prises de risque.
+  ledge(44,48,9);ledge(52,57,10);ledge(61,66,8);ledge(69,74,10);
+  ledge(77,82,8);ledge(85,90,10);ledge(94,100,8);ledge(104,116,9);
+  L.crumbles.push({x:58,y:9,w:2},{x:91,y:8,w:2});
+  L.crystals.push({x:58.1,y:6.6},{x:75.5,y:6.3},{x:91,y:6.1});
+  // La hauteur est une possibilité de speedrun, pas une obligation.
+  L.saws.push({x:81.8,y:5.2,dx:0,dy:1.2,per:2.7,r:14});
+  L.hints.push([54,4.3,'VII  ·  L’ENVOL FINAL'],[89,5,'DERNIER DASH  →']);
+  L.finish={x:112,y:8};
+  L.start={x:3,y:45};L.cps.unshift(L.start);
   return L;
 }
 
@@ -713,13 +755,39 @@ const AM = {"run": [[0, 0, 83, 102, 62.9, 102.2], [85, 0, 81, 90, 59.9, 90.5], [
 const RIM = 'rgba(200,225,255,.95)';
 const SPK = 0.72;
 let runDist = 0, landT = 0, djT = 0, trailT = 0, turnT = 0, takeT = 0, lastFace = 1;
-const MEDALS = [['ÉCLAIR', 16, '#ffe066'], ['OR', 22, '#ffb347'], ['ARGENT', 29, '#cfd8ea'], ['BRONZE', 39, '#d08a5a']];
+const MEDALS = [['ÉCLAIR', 52, '#ffe066'], ['OR', 68, '#ffb347'], ['ARGENT', 86, '#cfd8ea'], ['BRONZE', 115, '#d08a5a']];
 const $ = id => document.getElementById(id);
 const cv = $('cv'), cx = cv.getContext('2d');
+const miniCv=$('mini-map'),miniCx=miniCv.getContext('2d');
+let minimapBase=null, miniOn=false;
+function prepareMini(){
+  minimapBase=document.createElement('canvas');minimapBase.width=248;minimapBase.height=108;
+  const g=minimapBase.getContext('2d');const sx=248/L.W,sy=108/L.H;
+  g.fillStyle='#130b29';g.fillRect(0,0,248,108);
+  for(let y=0;y<L.H;y++)for(let x=0;x<L.W;x++){
+    const t=L.g[y][x];if(t===' ' )continue;
+    if(t==='#')g.fillStyle=L.g[Math.max(0,y-1)][x]!=='#'?'#b99de7':'#3f376e';
+    else g.fillStyle='#fe84aa';
+    g.fillRect(x*sx,y*sy,sx+.15,sy+.15);
+  }
+  g.fillStyle='#a482e7';for(const c of L.crumbles)g.fillRect(c.x*sx,c.y*sy,c.w*sx,1);
+  for(const p of L.plats){g.fillStyle='#63d7ff';g.fillRect(p.x*sx,p.y*sy,p.w*sx,1.5)}
+  for(let i=1;i<L.cps.length;i++){const c=L.cps[i];g.fillStyle='#edbee8';g.fillRect((c.x+.5)*sx-2,(c.y+.5)*sy-2,4,4)}
+  const f=L.finish;g.fillStyle='#ffce77';g.fillRect((f.x+.5)*sx-3,(f.y+.5)*sy-3,6,6);
+}
+function drawMini(){if(!miniOn||!S)return;
+  if(!minimapBase)prepareMini();miniCx.clearRect(0,0,248,108);miniCx.drawImage(minimapBase,0,0);
+  const p=S.p, x=(p.x+PH.PW/2)/T/L.W*248,y=(p.y+PH.PH/2)/T/L.H*108;
+  miniCx.beginPath();miniCx.arc(x,y,3.6,0,Math.PI*2);miniCx.fillStyle='#91f4ff';miniCx.fill();
+  miniCx.lineWidth=1.5;miniCx.strokeStyle='#0c0c25';miniCx.stroke();
+}
+function toggleMini(){miniOn=!miniOn;$('mini-wrap').hidden=!miniOn;$('hmap').setAttribute('aria-pressed',String(miniOn));drawMini()}
+$('hmap').addEventListener('click',toggleMini);
+
 let W = 0, H = 0, DPR = 1, scale = 1, VW = 0, VH = 0;
 const store = {
-  get(k, d) { try { const v = localStorage.getItem('eclair_flow2_' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
-  set(k, v) { try { localStorage.setItem('eclair_flow2_' + k, JSON.stringify(v)); } catch (e) { } }
+  get(k, d) { try { const v = localStorage.getItem('eclair_spirale1_' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem('eclair_spirale1_' + k, JSON.stringify(v)); } catch (e) { } }
 };
 let pb = store.get('pb', null);
 let pseudo = store.get('pseudo', '');
@@ -735,7 +803,7 @@ let prevPhysics = null, visualPose = null; // interpolation d'affichage à 120/1
 
 // ---------- entrées ----------
 const keys = new Set();
-const touch = { h: 0, j: false, d: false };
+const touch = { h: 0, v: 0, j: false, d: false };
 // Garder les tapotements très rapides même entre deux images (notamment sur iPhone).
 let jumpPulse = false, dashPulse = false;
 const JUMP_KEYS = new Set(['Space', 'KeyC', 'KeyK']);
@@ -747,6 +815,7 @@ function input() {
   if (keys.has('ArrowUp') || keys.has('KeyW') || keys.has('KeyZ')) v -= 1;
   if (keys.has('ArrowDown') || keys.has('KeyS')) v += 1;
   if (!h) h = touch.h;
+  if (!v) v = touch.v||0;
   const j = keys.has('Space') || keys.has('KeyC') || keys.has('KeyK') || touch.j;
   const d = keys.has('KeyX') || keys.has('ShiftLeft') || keys.has('ShiftRight') || keys.has('KeyL') || touch.d;
   return { h, v, j, d };
@@ -761,13 +830,14 @@ addEventListener('keydown', e => {
   }
   keys.add(e.code);
   if (e.code === 'KeyR' && state === 'play') restart();
+  if (e.code === 'KeyM' && state === 'play') toggleMini();
   if (e.code === 'Escape' && state === 'menu' && menuPanel !== 'home') setMenuPanel('home');
   else if (e.code === 'Escape' && state !== 'menu') toMenu();
   if ((e.code === 'Enter') && state === 'menu' && menuPanel === 'home') start();
   if ((e.code === 'Enter' || e.code === 'KeyR') && state === 'end') start();
 });
 addEventListener('keyup', e => keys.delete(e.code));
-addEventListener('blur', () => { keys.clear(); touch.h = 0; touch.j = touch.d = false; jumpPulse = dashPulse = false; });
+addEventListener('blur', () => { keys.clear(); touch.h = 0; touch.v=0; touch.j = touch.d = false; jumpPulse = dashPulse = false; });
 addEventListener('visibilitychange',()=>{last=performance.now();acc=0;tasAcc=0;keys.clear();clearTouch();});
 
 // Touch : chaque pouce doit agir uniquement dans SA zone (ancienne version :
@@ -775,13 +845,16 @@ addEventListener('visibilitychange',()=>{last=performance.now();acc=0;tasAcc=0;k
 function touchUpdate(e) {
   if(state!=='play')return;
   const pad=$('pad').getBoundingClientRect(), bj=$('bj').getBoundingClientRect(), bd=$('bd').getBoundingClientRect();
-  let h=0,j=false,d=false;
+  let h=0,v=0,j=false,d=false;
   const inside=(x,y,r,m)=>x>=r.left-m&&x<=r.right+m&&y>=r.top-m&&y<=r.bottom+m;
   const inCircle=(x,y,r,m)=>Math.hypot(x-(r.left+r.width/2),y-(r.top+r.height/2))<=Math.min(r.width,r.height)/2+m;
   for(const t of e.touches){
     const x=t.clientX,y=t.clientY;
     if(inside(x,y,pad,18)){
-      h=x<pad.left+pad.width/2?-1:1;continue;
+      h=x<pad.left+pad.width/2?-1:1;
+      const center=pad.top+pad.height/2;
+      if(y<center-pad.height*.24)v=-1;else if(y>center+pad.height*.24)v=1;
+      continue;
     }
     const onJ=inCircle(x,y,bj,16),onD=inCircle(x,y,bd,14);
     if(onJ&&onD){
@@ -792,13 +865,13 @@ function touchUpdate(e) {
   }
   if(j&&!touch.j)jumpPulse=true;
   if(d&&!touch.d)dashPulse=true;
-  touch.h=h;touch.j=j;touch.d=d;
+  touch.h=h;touch.v=v;touch.j=j;touch.d=d;
   $('pl').classList.toggle('on',h<0);$('pr').classList.toggle('on',h>0);
   $('bj').classList.toggle('on',j);$('bd').classList.toggle('on',d);
   if(e.cancelable && [...e.changedTouches].some(t=>t.clientY>=64))e.preventDefault();
 }
 ['touchstart', 'touchmove', 'touchend', 'touchcancel'].forEach(ev => addEventListener(ev, touchUpdate, { passive: false }));
-function clearTouch() { touch.h = 0; touch.j = touch.d = false; jumpPulse = dashPulse = false; ['pl', 'pr', 'bj', 'bd'].forEach(id => $(id).classList.remove('on')); }
+function clearTouch() { touch.h = 0; touch.v=0; touch.j = touch.d = false; jumpPulse = dashPulse = false; ['pl', 'pr', 'bj', 'bd'].forEach(id => $(id).classList.remove('on')); }
 const isTouch = matchMedia('(pointer:coarse)').matches || 'ontouchstart' in window;
 
 // ---------- mise en page ----------
@@ -833,7 +906,7 @@ function prerender() {
       }
     }
     // Marques de décollage sur le sol, deux chevrons vers l'avant de chaque fosse.
-    for(const [start,end] of L.holes){
+    for(const [start,end] of (L.holes||[])){
       const wx=start*T;
       if(wx<ox-110 || wx>ox+c.width+45) continue;
       let y=17;
@@ -1065,7 +1138,7 @@ function buildDecorPoints(){
   }
   // Petites touches de vie placées sur des rebords identifiés du niveau.
   // Aucun décor ne change les hitboxes ou la disposition du parcours.
-  const accents=[[8,18,0],[18,18,1],[39,17,5],[56,16,2],[69,16,4],[87,17,0],[97,18,5],[111,17,1],[126,16,13],[138,17,4],[151,18,1],[165,18,5]];
+  const accents=[[5,46,0],[15,44,1],[22,41,5],[31,38,2],[40,29,4],[50,30,0],[66,31,5],[85,30,1],[98,24,13],[90,15,4],[76,17,1],[50,16,5],[32,11,13],[64,8,4],[110,9,5]];
   for(const [x,y,type] of accents){
     if(isSolid(x,y) && !isSolid(x,y-1))ECLAIR_DECOR_POINTS.push({x:(x+.5)*T,y:y*T,type,w:type>=12?31:29,h:type>=12?41:27,alpha:type>=12?.47:.68});
   }
@@ -1398,9 +1471,10 @@ function tick(dt) {
 }
 function recGhost() { while (S.t >= ghostNext) { ghostRec.push(Math.round(S.p.x), Math.round(S.p.y)); ghostNext += GH_DT; } }
 function render(dt) {
+  if(S && state==='play') {const names=['I · LE RÉVEIL  ↗','III · LE VIADUC  →','IV · LA TOUR  ↑','V · LES VOÛTES  ←','VI · LA FLÈCHE  ↗','VII · L’ENVOL  →'];$('zone').textContent=names[Math.min(S.cp,names.length-1)];}
   cx.setTransform(DPR, 0, 0, DPR, 0, 0);
   if (!S) { S = newState(L); updCam(0, true); }
-  drawBg(); drawWorld(S.t);
+  drawBg(); drawWorld(S.t); drawMini();
   for (const q of parts) { q.x += q.vx * dt; q.y += q.vy * dt; q.vy += 600 * dt; q.l -= dt; }
   parts = parts.filter(q => q.l > 0);
   for (const tr of trail) tr.a -= dt * 4; trail = trail.filter(tr => tr.a > 0);
@@ -1424,6 +1498,7 @@ function render(dt) {
 function start() {
   if(typeof tasRun !== 'undefined') tasRun=false;
   $('tas-info').hidden=true; $('tas-result').hidden=true;
+  miniOn=false;$('mini-wrap').hidden=true;$('hmap').setAttribute('aria-pressed','false');
   ECLAIR_CP_TIMES=[]; ECLAIR_PORTAL_OPEN_AT=null;
   clearTouch(); runDist = 0; landT = 0; djT = 0; turnT = 0; takeT = 0; lastFace = 1; wallJumpT=0; wallJumpSide=1; idleBreathT=0; wasRunning=false; runIdleT=0;
   botMode = false; state = 'play'; S = newState(L); prevPhysics=null; visualPose=null; started = false; deaths = 0; deathT = 0; fadeIn = 0.3; acc = 0;
@@ -1435,7 +1510,7 @@ function start() {
   layout(); updCam(0, true);
 }
 function restart() { start(); }
-function toMenu() { prevPhysics=null;visualPose=null; if(typeof tasRun !== 'undefined')tasRun=false; botMode=false; $('tas-info').hidden=true; $('tas-result').hidden=true; setMenuPanel('home'); clearTouch(); state = 'menu'; $('menu').hidden = false; $('end').hidden = true; $('hud').hidden = true; $('go').hidden = true; layout(); renderMenu(); }
+function toMenu() { prevPhysics=null;visualPose=null; if(typeof tasRun !== 'undefined')tasRun=false; botMode=false; $('tas-info').hidden=true; $('tas-result').hidden=true;miniOn=false;$('mini-wrap').hidden=true; setMenuPanel('home'); clearTouch(); state = 'menu'; $('menu').hidden = false; $('end').hidden = true; $('hud').hidden = true; $('go').hidden = true; layout(); renderMenu(); }
 function medalFor(t) { for (const m of MEDALS) if (t <= m[1]) return m; return null; }
 function finish() {
   const t = S.t; state = 'end'; clearTouch(); runEnd = { t, deaths };
@@ -1504,7 +1579,7 @@ function renderMenu() {
   $('mypb').textContent = pb ? fmt(pb.t) : '—';
   const m = pb && medalFor(pb.t); $('mymed').textContent = m ? m[0] : ''; $('mymed').style.color = m ? m[2] : '';
   const ul = $('lb'); ul.textContent = '';
-  if (!dbOk) { const li = document.createElement('li'); li.className = 'empty'; li.textContent = 'Nouvelle carte FLOW : records locaux uniquement. Ancien classement séparé.'; ul.appendChild(li); }
+  if (!dbOk) { const li = document.createElement('li'); li.className = 'empty'; li.textContent = 'Nouvelle carte LA SPIRALE : records locaux uniquement.'; ul.appendChild(li); }
   else if (!rows.length) { const li = document.createElement('li'); li.className = 'empty'; li.textContent = 'Personne encore. Sois le premier !'; ul.appendChild(li); }
   rows.forEach((r, i) => {
     const li = document.createElement('li'); if (r.id === uid) li.className = 'me';
@@ -1579,26 +1654,26 @@ function renderPodium(){
 // Archive TAS : reproduit strictement l'ancienne version du jeu. Son moteur est
 // isolé et n'est JAMAIS utilisé par le joueur. Le 12,892 s est un temps historique,
 // pas un record du nouveau moteur.
-// TAS FLOW v2 : trajet calculé et vérifié sur cette géométrie exacte.
+// TAS SPIRALE v3 : parcours entier rejoué et vérifié à 240 Hz, nouveau tracé et physique réelle.
 // Toutes les commandes pilotent le même step() à 240 Hz que les joueurs.
 // Record = meilleur résultat trouvé, PAS preuve d'optimalité mathématique.
-const TAS_ACTIONS={"R":[1,0,0,0],"RJ":[1,1,0,0],"RD":[1,0,1,0],"RUD":[1,0,1,-1],"RJD":[1,1,1,0],"RUJD":[1,1,1,-1],"RN":[1,0,0,-1],"NR":[0,0,0,0],"NJ":[0,1,0,0],"L":[-1,0,0,0]};
-const TAS_ROUTE=[{"a":"RD","n":15},{"a":"R","n":30},{"a":"RD","n":15},{"a":"R","n":30},{"a":"RD","n":15},{"a":"R","n":30},{"a":"RD","n":15},{"a":"R","n":30},{"a":"RD","n":15},{"a":"R","n":30},{"a":"RD","n":15},{"a":"R","n":30},{"a":"RD","n":15},{"a":"R","n":15},{"a":"RJ","n":15},{"a":"R","n":60},{"a":"RD","n":15},{"a":"R","n":15},{"a":"RJ","n":15},{"a":"R","n":75},{"a":"RD","n":15},{"a":"R","n":30},{"a":"RD","n":15},{"a":"R","n":30},{"a":"RD","n":15},{"a":"R","n":15},{"a":"RJ","n":15},{"a":"R","n":60},{"a":"RD","n":15},{"a":"R","n":30},{"a":"RD","n":15},{"a":"R","n":30},{"a":"RD","n":15},{"a":"R","n":15},{"a":"RJ","n":15},{"a":"R","n":75},{"a":"RD","n":15},{"a":"R","n":30},{"a":"RD","n":15},{"a":"R","n":15},{"a":"RJ","n":15},{"a":"R","n":90},{"a":"RD","n":15},{"a":"R","n":30},{"a":"RD","n":15},{"a":"R","n":15},{"a":"RJ","n":15},{"a":"R","n":90},{"a":"RD","n":15},{"a":"R","n":30},{"a":"RD","n":15},{"a":"R","n":30},{"a":"RD","n":15},{"a":"RJ","n":15},{"a":"R","n":75},{"a":"RD","n":15},{"a":"R","n":30},{"a":"RD","n":15},{"a":"R","n":15},{"a":"RJ","n":15},{"a":"R","n":90},{"a":"RD","n":15},{"a":"R","n":30},{"a":"RD","n":15},{"a":"R","n":15},{"a":"RJ","n":15},{"a":"R","n":90},{"a":"RD","n":15},{"a":"R","n":30},{"a":"RD","n":15},{"a":"R","n":30},{"a":"RD","n":15},{"a":"R","n":15},{"a":"RJ","n":15},{"a":"R","n":90},{"a":"RD","n":15},{"a":"R","n":30},{"a":"RD","n":15},{"a":"R","n":30},{"a":"RD","n":15},{"a":"R","n":30},{"a":"RD","n":15},{"a":"R","n":30},{"a":"RD","n":15},{"a":"R","n":30},{"a":"RD","n":15},{"a":"R","n":15},{"a":"RJ","n":15},{"a":"R","n":30}];
-const TAS_REFERENCE_TIME=9.69166666666644; // 2326 frames à 240 Hz
+const TAS_ACTIONS={"R":[1,0,0,0],"RJ":[1,1,0,0],"RN":[1,0,0,0],"RD":[1,0,1,0],"RUD":[1,0,1,-1],"RJD":[1,1,1,0],"L":[-1,0,0,0],"LJ":[-1,1,0,0],"LD":[-1,0,1,0],"LUD":[-1,0,1,-1],"N":[0,0,0,0],"NJ":[0,1,0,0],"NUD":[0,0,1,-1]};
+const TAS_ROUTE=[{"a":"RD","n":14},{"a":"R","n":28},{"a":"RD","n":14},{"a":"R","n":14},{"a":"N","n":14},{"a":"LJ","n":14},{"a":"R","n":14},{"a":"RJ","n":70},{"a":"RD","n":14},{"a":"R","n":14},{"a":"RJ","n":28},{"a":"R","n":14},{"a":"N","n":14},{"a":"NJ","n":14},{"a":"RD","n":14},{"a":"R","n":14},{"a":"RJ","n":14},{"a":"R","n":14},{"a":"RJ","n":14},{"a":"R","n":28},{"a":"RD","n":14},{"a":"RJ","n":28},{"a":"R","n":56},{"a":"RJ","n":56},{"a":"R","n":14},{"a":"RJ","n":14},{"a":"L","n":14},{"a":"LJ","n":28},{"a":"N","n":14},{"a":"LUD","n":14},{"a":"RJ","n":14},{"a":"RD","n":14},{"a":"R","n":28},{"a":"RD","n":14},{"a":"R","n":28},{"a":"RD","n":14},{"a":"R","n":28},{"a":"RD","n":14},{"a":"R","n":28},{"a":"RD","n":14},{"a":"R","n":14},{"a":"RJ","n":14},{"a":"R","n":70},{"a":"RD","n":14},{"a":"R","n":42},{"a":"RD","n":14},{"a":"R","n":14},{"a":"RJ","n":14},{"a":"R","n":14},{"a":"RJ","n":28},{"a":"R","n":56},{"a":"RJ","n":28},{"a":"R","n":14},{"a":"RD","n":14},{"a":"RJ","n":14},{"a":"R","n":56},{"a":"RD","n":14},{"a":"R","n":70},{"a":"RD","n":14},{"a":"RJ","n":42},{"a":"R","n":28},{"a":"RJ","n":14},{"a":"RD","n":14},{"a":"RJ","n":14},{"a":"R","n":28},{"a":"RJD","n":14},{"a":"L","n":14},{"a":"RJ","n":14},{"a":"NJ","n":14},{"a":"LUD","n":14},{"a":"RJ","n":14},{"a":"R","n":14},{"a":"RJ","n":14},{"a":"N","n":14},{"a":"NJ","n":14},{"a":"LJ","n":14},{"a":"NJ","n":14},{"a":"L","n":28},{"a":"LD","n":14},{"a":"R","n":14},{"a":"L","n":14},{"a":"LD","n":14},{"a":"R","n":14},{"a":"L","n":56},{"a":"LD","n":14},{"a":"R","n":14},{"a":"LJ","n":14},{"a":"L","n":84},{"a":"LJ","n":14},{"a":"L","n":14},{"a":"LD","n":14},{"a":"LJ","n":14},{"a":"L","n":14},{"a":"N","n":14},{"a":"L","n":28},{"a":"LD","n":14},{"a":"R","n":14},{"a":"L","n":14},{"a":"LD","n":14},{"a":"R","n":14},{"a":"L","n":84},{"a":"LD","n":14},{"a":"R","n":14},{"a":"L","n":14},{"a":"LD","n":14},{"a":"LJ","n":14},{"a":"L","n":56},{"a":"LD","n":14},{"a":"R","n":14},{"a":"L","n":14},{"a":"R","n":14},{"a":"LD","n":14},{"a":"R","n":14},{"a":"NJ","n":14},{"a":"RJ","n":14},{"a":"L","n":14},{"a":"LJ","n":14},{"a":"LD","n":14},{"a":"R","n":14},{"a":"LJ","n":14},{"a":"L","n":14},{"a":"LJ","n":14},{"a":"L","n":28},{"a":"LD","n":14},{"a":"RJ","n":56},{"a":"R","n":28},{"a":"RD","n":14},{"a":"R","n":28},{"a":"RD","n":14},{"a":"R","n":70},{"a":"RD","n":14},{"a":"R","n":28},{"a":"RD","n":14},{"a":"R","n":14},{"a":"RJ","n":14},{"a":"R","n":14},{"a":"RJ","n":28},{"a":"R","n":14},{"a":"L","n":14},{"a":"R","n":14},{"a":"RJD","n":14},{"a":"N","n":14},{"a":"RD","n":14},{"a":"R","n":14},{"a":"RJ","n":14},{"a":"R","n":84},{"a":"RD","n":14},{"a":"R","n":14},{"a":"RJ","n":14},{"a":"R","n":70},{"a":"RD","n":14},{"a":"R","n":14},{"a":"RJ","n":28},{"a":"RJD","n":14},{"a":"RJ","n":70},{"a":"RJD","n":14},{"a":"R","n":14},{"a":"RJ","n":14},{"a":"R","n":14},{"a":"RJ","n":28},{"a":"R","n":42},{"a":"RJ","n":14},{"a":"RD","n":14},{"a":"RJ","n":14},{"a":"R","n":84},{"a":"RD","n":14},{"a":"R","n":14},{"a":"RJ","n":14},{"a":"R","n":98},{"a":"RD","n":14}];
+const TAS_REFERENCE_TIME=15.691666666666; // 3766 frames à 240 Hz : trajet complet, sans téléportation ni mort
 let tasRun=false,tasChunk=0,tasOffset=0,tasAcc=0,tasRate=1,tasFrames=0;
 function startTas(){
  start();
  tasRun=true;botMode=true;started=true;tasChunk=0;tasOffset=0;tasAcc=0;tasFrames=0;tasRate=1;
  ghostPlay=null; $('go').hidden=true; $('touch').hidden=true; $('tas-result').hidden=true;
- $('tas-info').hidden=false; $('tas-progress').textContent='TAS FLOW · 0,000 s'; $('tas-speed').textContent='×1';
+ $('tas-info').hidden=false; $('tas-progress').textContent='TAS SPIRALE · 0,000 s'; $('tas-speed').textContent='×1';
 }
 function finishTas(success){
  tasRun=false;botMode=false;state='end';$('tas-info').hidden=true;
  $('tas-result').hidden=false;$('hud').hidden=true;$('touch').hidden=true;
- $('tas-result-title').textContent=success?'TAS OPTIMISÉ — ARRIVÉE':'TAS OPTIMISÉ — INTERROMPU';
+ $('tas-result-title').textContent=success?'TAS SPIRALE — ARRIVÉE':'TAS SPIRALE — INTERROMPU';
  $('tas-result-time').textContent=S.t.toFixed(3).replace('.',',')+' s';
  $('tas-result-note').textContent=success
-  ? 'Trajectoire validée sur le nouveau circuit et la nouvelle physique à 240 Hz. Meilleur temps trouvé par notre solveur.'
+  ? 'Trajectoire complète validée sur LA SPIRALE à 240 Hz, sans mourir et avec les checkpoints. Meilleur temps trouvé par le solveur, non prouvé optimal.'
   : 'Replay interrompu. Ton record personnel reste inchangé.';
 }
 function tickTas(dt){
@@ -1626,7 +1701,7 @@ function tickTas(dt){
    if(S.done){finishTas(true);break;}
    if(S.dead){finishTas(false);break;}
  }
- if(tasRun){$('tas-progress').textContent='TAS FLOW · '+S.t.toFixed(3).replace('.',',')+' s · '+tasFrames+' frames';updCam(dt,false);}
+ if(tasRun){$('tas-progress').textContent='TAS SPIRALE · '+S.t.toFixed(3).replace('.',',')+' s · '+tasFrames+' frames';updCam(dt,false);}
 }
 $('tas-start').addEventListener('click',startTas);
 $('tas-again').addEventListener('click',startTas);
@@ -1647,7 +1722,7 @@ window.__eclairTAS={play:startTas,referenceTime:TAS_REFERENCE_TIME,
 // accès test
 window.__eclair = { L, step, newState, cloneState, get S() { return S; }, start, state: () => state, play(hist) {
   start(); botMode = true; started = true; $('go').hidden = true; const ACTS = []; for (const h of [-1, 0, 1]) for (const j of [0, 1]) for (const d of [0, 1]) ACTS.push({ h, v: 0, j: !!j, d: !!d });
-  let k = 0; const it = setInterval(() => { if (k >= hist.length || state !== 'play') { clearInterval(it); botMode = false; touch.h = 0; touch.j = touch.d = false; return; } const a = ACTS[hist[k++]]; for (let i = 0; i < 12; i++) { if (S.dead || S.done) break; step(L, S, a, 1 / 240); if (S.p.gr && Math.abs(S.p.vx) > 30) runDist += Math.abs(S.p.vx) / 240; landT -= 1 / 240; djT -= 1 / 240; takeT -= 1 / 240; turnT -= 1 / 240; if (S.p.gr && S.p.face !== lastFace) turnT = 0.2; lastFace = S.p.face; handleEvents(); recGhost(); } updCam(0.05, false); }, 50);
+  let k = 0; const it = setInterval(() => { if (k >= hist.length || state !== 'play') { clearInterval(it); botMode = false; touch.h = 0; touch.v=0; touch.j = touch.d = false; return; } const a = ACTS[hist[k++]]; for (let i = 0; i < 12; i++) { if (S.dead || S.done) break; step(L, S, a, 1 / 240); if (S.p.gr && Math.abs(S.p.vx) > 30) runDist += Math.abs(S.p.vx) / 240; landT -= 1 / 240; djT -= 1 / 240; takeT -= 1 / 240; turnT -= 1 / 240; if (S.p.gr && S.p.face !== lastFace) turnT = 0.2; lastFace = S.p.face; handleEvents(); recGhost(); } updCam(0.05, false); }, 50);
 } };
 
 buildDecorPoints(); layout(); prerender(); renderMenu(); initDb();
